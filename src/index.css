@@ -1,0 +1,88 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,600&family=Inter:wght@400;700;900&family=JetBrains+Mono&display=swap');
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Cormorant Garamond", serif;
+  
+  --color-midnight: #020205;
+  --color-trade-green: #00FF94;
+  --color-trade-red: #FF3B3B;
+  --color-trade-blue: #00D1FF;
+  --color-vibe-glow: #00FF94;
+  --color-vibe-pink: #00D1FF;
+  --color-vibe-gold: #FFD700;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --background: #020205;
+  --foreground: #E2E2E7;
+  --card: #0A0A12;
+  --card-foreground: #E2E2E7;
+  --popover: #0A0A12;
+  --popover-foreground: #E2E2E7;
+  --primary: #00FF94;
+  --primary-foreground: #000000;
+  --secondary: #12121A;
+  --secondary-foreground: #E2E2E7;
+  --muted: #12121A;
+  --muted-foreground: #71717A;
+  --accent: #1A1A24;
+  --accent-foreground: #00FF94;
+  --destructive: #FF3B3B;
+  --border: rgba(255, 255, 255, 0.05);
+  --input: #12121A;
+  --ring: #00FF94;
+  --radius: 0rem;
+}
+
+@layer utilities {
+  .terminal-border {
+    @apply border border-white/10 relative;
+    &::before {
+      content: "";
+      @apply absolute top-0 left-0 w-2 h-px bg-primary;
+    }
+    &::after {
+      content: "";
+      @apply absolute bottom-0 right-0 w-2 h-px bg-primary;
+    }
+  }
+  .glass {
+    @apply bg-white/2 backdrop-blur-xl border border-white/5;
+  }
+  .text-glow {
+    text-shadow: 0 0 10px rgba(0, 255, 148, 0.4);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-primary/30 selection:text-white;
+  }
+}

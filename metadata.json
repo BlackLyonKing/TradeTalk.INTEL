@@ -1,0 +1,6 @@
+{
+  "name": "TradeTalk Intelligence Node",
+  "description": "Enterprise-grade crypto alpha terminal with real-time Coinglass diagnostics and AI psychological auditing.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TradeTalk.Intel | Alpha systems</title>
+    <script>
+      // Suppress extension-related noise and property redefinition errors
+      (function() {
+        const suppressPatterns = [
+          'ethereum',
+          'talisman',
+          'metamask',
+          'extension',
+          'redefine property',
+          'onboarding'
+        ];
+
+        const shouldSuppress = (msg) => {
+          if (!msg) return false;
+          const lower = String(msg).toLowerCase();
+          return suppressPatterns.some(p => lower.includes(p));
+        };
+
+        // Block annoying extensions from breaking with redefine errors
+        try {
+          const noop = {
+            get: () => undefined,
+            set: () => {},
+            configurable: true
+          };
+          if (!window.ethereum) {
+            Object.defineProperty(window, 'ethereum', noop);
+          }
+          if (!window.talisman) {
+            Object.defineProperty(window, 'talisman', noop);
+          }
+        } catch (e) {
+          // ignore define errors
+        }
+
+        const filterArgs = (args) => {
+          return args.some(arg => {
+            if (typeof arg === 'string') {
+              return shouldSuppress(arg);
+            }
+            if (arg && typeof arg === 'object') {
+              if (shouldSuppress(arg.message) || shouldSuppress(arg.reason) || shouldSuppress(arg.stack)) {
+                return true;
+              }
+            }
+            return false;
+          });
+        };
+
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        console.error = (...args) => {
+          if (filterArgs(args)) return;
+          originalError.apply(console, args);
+        };
+
+        console.warn = (...args) => {
+          if (filterArgs(args)) return;
+          originalWarn.apply(console, args);
+        };
+
+        // Intercept global uncaught errors
+        const handleGlobalError = (msg, url, line, col, error) => {
+          if (shouldSuppress(msg) || (error && shouldSuppress(error.message))) {
+            return true; // prevent default routing of errors
+          }
+        };
+        window.onerror = handleGlobalError;
+
+        window.addEventListener('error', (event) => {
+          const msg = event.message || (event.error && event.error.message);
+          if (shouldSuppress(msg)) {
+            event.stopImmediatePropagation();
+            event.preventDefault();
+          }
+        }, true);
+
+        window.addEventListener('unhandledrejection', (event) => {
+          const reasonComp = event.reason;
+          const msg = (reasonComp && (reasonComp.message || reasonComp)) || '';
+          if (shouldSuppress(msg)) {
+            event.stopImmediatePropagation();
+            event.preventDefault();
+          }
+        }, true);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

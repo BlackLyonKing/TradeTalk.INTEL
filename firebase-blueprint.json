@@ -1,0 +1,41 @@
+{
+  "entities": {
+    "Customer": {
+      "title": "Customer",
+      "description": "Represents a caller with metadata for personalization.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "phone": { "type": "string", "description": "E.164 formatted phone number" },
+        "name": { "type": "string" },
+        "balance": { "type": "number", "description": "Credit balance in USD" },
+        "tier": { "type": "string", "enum": ["standard", "pro", "whale"], "description": "Trading alpha tier" },
+        "last_call_summary": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["phone", "name"]
+    },
+    "Conversation": {
+      "title": "Conversation",
+      "description": "Historical record of a trading setup discussion.",
+      "type": "object",
+      "properties": {
+        "phone": { "type": "string" },
+        "summary": { "type": "string" },
+        "transcript": { "type": "string" },
+        "duration": { "type": "number" },
+        "created_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/customers": {
+      "schema": "Customer",
+      "description": "Main trader registry."
+    },
+    "/conversations": {
+      "schema": "Conversation",
+      "description": "Time-series log of all trading sessions."
+    }
+  }
+}
